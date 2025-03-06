@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejemplos con Canvas</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            background-color: #87CEEB; /* Azul cielo */
+        }
+        .canvas-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        .canvas-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        canvas { 
+            border: 1px solid black; 
+            margin: 10px; 
+        }
+    </style>
+</head>
+<body>
+    <h1>Ejemplos de Canvas</h1>
+    <div class="canvas-container">
+        <div class="canvas-box">
+            <h2>1. Rectángulo</h2>
+            <canvas id="rectCanvas" width="200" height="100"></canvas>
+        </div>
+        <div class="canvas-box">
+            <h2>2. Círculo</h2>
+            <canvas id="circleCanvas" width="200" height="100"></canvas>
+        </div>
+        <div class="canvas-box">
+            <h2>3. Líneas</h2>
+            <canvas id="lineCanvas" width="200" height="100"></canvas>
+        </div>
+        <div class="canvas-box">
+            <h2>4. Texto</h2>
+            <canvas id="textCanvas" width="300" height="100"></canvas>
+        </div>
+        <div class="canvas-box">
+            <h2>5. Imagen</h2>
+            <canvas id="imageCanvas" width="300" height="150"></canvas>
+        </div>
+        <div class="canvas-box">
+            <h2>6. Animación</h2>
+            <canvas id="animationCanvas" width="300" height="100"></canvas>
+        </div>
+        <div class="canvas-box">
+            <h2>7. Dibujar</h2>
+            <canvas id="drawCanvas" width="300" height="150"></canvas>
+            <label for="lineWidth">Grosor:</label>
+            <input type="range" id="lineWidth" min="1" max="10" value="4">
+            <button onclick="clearCanvas()">Borrar</button>
+        </div>
+        <div class="canvas-box">
+            <h2>8. Eventos</h2>
+            <canvas id="eventCanvas" width="300" height="150"></canvas>
+        </div>
+    </div>
+    <script>
+        let rectCtx = document.getElementById("rectCanvas").getContext("2d");
+        rectCtx.fillStyle = "blue";
+        rectCtx.fillRect(20, 20, 150, 70);
+
+        let circleCtx = document.getElementById("circleCanvas").getContext("2d");
+        circleCtx.beginPath();
+        circleCtx.arc(100, 50, 40, 0, 2 * Math.PI);
+        circleCtx.fillStyle = "red";
+        circleCtx.fill();
+
+        let lineCtx = document.getElementById("lineCanvas").getContext("2d");
+        lineCtx.beginPath();
+        lineCtx.moveTo(20, 20);
+        lineCtx.lineTo(180, 80);
+        lineCtx.strokeStyle = "green";
+        lineCtx.lineWidth = 5;
+        lineCtx.stroke();
+
+        let textCtx = document.getElementById("textCanvas").getContext("2d");
+        textCtx.font = "20px Arial";
+        textCtx.fillStyle = "purple";
+        textCtx.fillText("Hola Canvas!", 50, 50);
+
+        let img = new Image();
+        img.src = "https://i.blogs.es/c05059/tobey-maguire-spider-man/450_1000.jpeg";
+        img.onload = function() {
+            let imgCtx = document.getElementById("imageCanvas").getContext("2d");
+            imgCtx.drawImage(img, 0, 0, img.width, img.height, 0, 0, 300, 150);
+        };
+
+        let animCtx = document.getElementById("animationCanvas").getContext("2d");
+        let x = 0;
+        function animate() {
+            animCtx.clearRect(0, 0, 300, 100);
+            animCtx.fillStyle = "orange";
+            animCtx.fillRect(x, 40, 50, 50);
+            x += 2;
+            if (x > 300) x = -50;
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        let drawCanvas = document.getElementById("drawCanvas");
+        let drawCtx = drawCanvas.getContext("2d");
+        let drawing = false;
+        let lineWidthInput = document.getElementById("lineWidth");
+        
+        drawCanvas.addEventListener("mousedown", () => drawing = true);
+        drawCanvas.addEventListener("mouseup", () => drawing = false);
+        drawCanvas.addEventListener("mousemove", (e) => {
+            if (!drawing) return;
+            drawCtx.fillStyle = "black";
+            drawCtx.beginPath();
+            drawCtx.arc(e.offsetX, e.offsetY, lineWidthInput.value / 2, 0, Math.PI * 2);
+            drawCtx.fill();
+        });
+        
+        function clearCanvas() {
+            drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+        }
+
+        let eventCanvas = document.getElementById("eventCanvas");
+        let eventCtx = eventCanvas.getContext("2d");
+        eventCanvas.addEventListener("click", () => {
+            eventCtx.fillStyle = "blue";
+            eventCtx.fillRect(50, 50, 100, 50);
+        });
+    </script>
+</body>
+</html>
